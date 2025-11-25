@@ -131,7 +131,7 @@ const resumeData = {
   ],
 };
 
-// --- Three.js Cyber Network Background ---
+// --- Three.js Earth CDN Network Background ---
 const CyberNetworkBackground = ({ isDark }) => {
   const containerRef = useRef(null);
 
@@ -139,9 +139,9 @@ const CyberNetworkBackground = ({ isDark }) => {
     if (!containerRef.current) return;
 
     const scene = new THREE.Scene();
-    // Deep dark fog for that "endless void" feel
-    const fogColor = isDark ? 0x050505 : 0xf0f9ff;
-    scene.fog = new THREE.FogExp2(fogColor, 0.0025);
+    // Space background
+    const bgColor = isDark ? 0x000000 : 0x0a0a1a;
+    scene.background = new THREE.Color(bgColor);
 
     const camera = new THREE.PerspectiveCamera(
       60,
@@ -149,82 +149,301 @@ const CyberNetworkBackground = ({ isDark }) => {
       0.1,
       1000
     );
-    camera.position.z = 40;
-    camera.position.y = 10;
+    camera.position.z = 80;
+    camera.position.y = 20;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     containerRef.current.appendChild(renderer.domElement);
 
-    // --- Cyber Nodes (Wireframe Icosahedrons) ---
-    const nodeCount = 50;
-    const nodes = [];
-    const geometry = new THREE.IcosahedronGeometry(0.8, 0); // Geometric tech look
-    // Neon material with additive blending for glow
-    const material = new THREE.MeshBasicMaterial({
-      color: isDark ? 0x00ff88 : 0x2563eb,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.6,
-    });
+    // --- Earth Globe ---
+    const earthRadius = 20;
+    const earthGeo = new THREE.SphereGeometry(earthRadius, 64, 64);
 
-    for (let i = 0; i < nodeCount; i++) {
-      const mesh = new THREE.Mesh(geometry, material.clone());
-      mesh.position.set(
-        (Math.random() - 0.5) * 90,
-        (Math.random() - 0.5) * 50,
-        (Math.random() - 0.5) * 50
-      );
-      // Random rotation speed
-      mesh.userData = {
-        rotSpeed: {
-          x: (Math.random() - 0.5) * 0.02,
-          y: (Math.random() - 0.5) * 0.02,
-        },
-        velocity: {
-          x: (Math.random() - 0.5) * 0.03,
-          y: (Math.random() - 0.5) * 0.03,
-          z: (Math.random() - 0.5) * 0.03,
-        },
-      };
-      scene.add(mesh);
-      nodes.push(mesh);
-    }
-
-    // --- Connections (Data Lines) ---
-    const linesGeometry = new THREE.BufferGeometry();
-    const linesMaterial = new THREE.LineBasicMaterial({
-      color: isDark ? 0x00ff88 : 0x2563eb,
-      transparent: true,
-      opacity: 0.15,
-      blending: THREE.AdditiveBlending, // Glow effect
-    });
-    const lines = new THREE.LineSegments(linesGeometry, linesMaterial);
-    scene.add(lines);
-
-    // --- Data Packets (Glowing Pulses) ---
-    const packetCount = 20;
-    const packets = [];
-    const packetGeo = new THREE.SphereGeometry(0.25, 4, 4);
-    const packetMat = new THREE.MeshBasicMaterial({
-      color: isDark ? 0xffffff : 0x0ea5e9,
+    // Dark earth material (night side)
+    const earthMat = new THREE.MeshBasicMaterial({
+      color: isDark ? 0x0a0a1a : 0x1a1a2e,
       transparent: true,
       opacity: 0.9,
     });
+    const earthMesh = new THREE.Mesh(earthGeo, earthMat);
+    scene.add(earthMesh);
+
+    // Atmosphere glow
+    const atmosphereGeo = new THREE.SphereGeometry(earthRadius * 1.15, 64, 64);
+    const atmosphereMat = new THREE.MeshBasicMaterial({
+      color: isDark ? 0x00aaff : 0x4a9eff,
+      transparent: true,
+      opacity: 0.15,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+    });
+    const atmosphereMesh = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+    scene.add(atmosphereMesh);
+
+    // --- CDN Edge Nodes (Glowing Points on Globe) ---
+    const nodeCount = 400;
+    const nodes = [];
+
+    // Generate nodes based on population density patterns
+    const continents = [
+      // North America
+      { lat: 40, lon: -100, density: 50 },
+      { lat: 35, lon: -80, density: 40 },
+      // Europe
+      { lat: 50, lon: 10, density: 60 },
+      { lat: 45, lon: 25, density: 45 },
+      // Asia
+      { lat: 35, lon: 110, density: 70 },
+      { lat: 22, lon: 88, density: 55 },
+      { lat: 1, lon: 103, density: 50 },
+      // South America
+      { lat: -23, lon: -45, density: 35 },
+      // Africa
+      { lat: -1, lon: 35, density: 30 },
+      // Australia
+      { lat: -33, lon: 151, density: 25 },
+    ];
+
+    continents.forEach((continent) => {
+      for (let i = 0; i < continent.density; i++) {
+        const lat =
+          (continent.lat + (Math.random() - 0.5) * 30) * (Math.PI / 180);
+        const lon =
+          (continent.lon + (Math.random() - 0.5) * 40) * (Math.PI / 180);
+
+        const x = earthRadius * Math.cos(lat) * Math.cos(lon);
+        const y = earthRadius * Math.sin(lat);
+        const z = earthRadius * Math.cos(lat) * Math.sin(lon);
+
+        // Node glow
+        const nodeSize = 0.15 + Math.random() * 0.25;
+        const nodeGeo = new THREE.SphereGeometry(nodeSize, 8, 8);
+
+        // Green and greenish-yellow colors
+        const isYellow = Math.random() > 0.6;
+        const nodeColor = isDark
+          ? isYellow
+            ? 0xaaff00
+            : 0x00ff66
+          : isYellow
+          ? 0xd4ff00
+          : 0x00ff88;
+
+        const nodeMat = new THREE.MeshBasicMaterial({
+          color: nodeColor,
+          transparent: true,
+          opacity: 0.9,
+          blending: THREE.AdditiveBlending,
+        });
+
+        const nodeMesh = new THREE.Mesh(nodeGeo, nodeMat);
+        nodeMesh.position.set(x, y, z);
+
+        // Outer glow
+        const glowGeo = new THREE.SphereGeometry(nodeSize * 2.5, 8, 8);
+        const glowMat = new THREE.MeshBasicMaterial({
+          color: nodeColor,
+          transparent: true,
+          opacity: 0.3,
+          blending: THREE.AdditiveBlending,
+        });
+        const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+        glowMesh.position.set(x, y, z);
+
+        scene.add(nodeMesh);
+        scene.add(glowMesh);
+
+        nodes.push({
+          mesh: nodeMesh,
+          glow: glowMesh,
+          position: new THREE.Vector3(x, y, z),
+          pulsePhase: Math.random() * Math.PI * 2,
+          pulseSpeed: 0.02 + Math.random() * 0.03,
+        });
+      }
+    });
+
+    // --- Orbital Data Streams (Curved Lines) ---
+    const streamCount = 80;
+    const streams = [];
+
+    for (let i = 0; i < streamCount; i++) {
+      const startNode = nodes[Math.floor(Math.random() * nodes.length)];
+      const endNode = nodes[Math.floor(Math.random() * nodes.length)];
+
+      if (startNode === endNode) continue;
+
+      // Create curved path
+      const start = startNode.position.clone();
+      const end = endNode.position.clone();
+
+      // Control point for curve (higher above surface)
+      const mid = start.clone().add(end).multiplyScalar(0.5);
+      const distance = start.distanceTo(end);
+      mid.normalize().multiplyScalar(earthRadius + distance * 0.3);
+
+      // Create curve
+      const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+      const points = curve.getPoints(50);
+
+      const streamGeo = new THREE.BufferGeometry().setFromPoints(points);
+      const streamMat = new THREE.LineBasicMaterial({
+        color: isDark ? 0x00ffaa : 0x00ff88,
+        transparent: true,
+        opacity: 0.3,
+        blending: THREE.AdditiveBlending,
+      });
+
+      const streamLine = new THREE.Line(streamGeo, streamMat);
+      scene.add(streamLine);
+
+      streams.push({
+        line: streamLine,
+        opacity: 0.3,
+      });
+    }
+
+    // --- Data Packets (Moving along streams) ---
+    const packetCount = 150;
+    const packets = [];
 
     for (let i = 0; i < packetCount; i++) {
-      const mesh = new THREE.Mesh(packetGeo, packetMat);
-      scene.add(mesh);
+      const packetGeo = new THREE.SphereGeometry(0.2, 6, 6);
+      const packetMat = new THREE.MeshBasicMaterial({
+        color: isDark ? 0xffffff : 0xaaffaa,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+      });
+      const packetMesh = new THREE.Mesh(packetGeo, packetMat);
+
+      // Tail trail
+      const tailGeo = new THREE.SphereGeometry(0.3, 6, 6);
+      const tailMat = new THREE.MeshBasicMaterial({
+        color: isDark ? 0x00ff66 : 0x00ff88,
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending,
+      });
+      const tailMesh = new THREE.Mesh(tailGeo, tailMat);
+
+      scene.add(packetMesh);
+      scene.add(tailMesh);
+
       packets.push({
-        mesh,
-        pathStart: new THREE.Vector3(),
-        pathEnd: new THREE.Vector3(),
+        mesh: packetMesh,
+        tail: tailMesh,
+        stream: null,
         progress: 0,
-        speed: 0.01 + Math.random() * 0.03, // Variable speed data
+        speed: 0.005 + Math.random() * 0.01,
         active: false,
       });
     }
+
+    // --- Star Field ---
+    const starCount = 2000;
+    const starsGeo = new THREE.BufferGeometry();
+    const starPositions = new Float32Array(starCount * 3);
+
+    for (let i = 0; i < starCount; i++) {
+      starPositions[i * 3] = (Math.random() - 0.5) * 500;
+      starPositions[i * 3 + 1] = (Math.random() - 0.5) * 500;
+      starPositions[i * 3 + 2] = (Math.random() - 0.5) * 500;
+    }
+
+    starsGeo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(starPositions, 3)
+    );
+    const starsMat = new THREE.PointsMaterial({
+      color: isDark ? 0xffffff : 0xccccff,
+      size: 0.5,
+      transparent: true,
+      opacity: 0.6,
+    });
+    const stars = new THREE.Points(starsGeo, starsMat);
+    scene.add(stars);
+
+    // --- Continental Outlines (Subtle lines) ---
+    const outlinePoints = [];
+
+    // Simple continental approximations
+    const continentalPaths = [
+      // North America rough outline
+      [
+        [40, -125],
+        [50, -125],
+        [60, -100],
+        [50, -70],
+        [30, -80],
+        [25, -110],
+      ],
+      // Europe
+      [
+        [60, -10],
+        [70, 20],
+        [60, 40],
+        [40, 40],
+        [35, 10],
+        [40, -10],
+      ],
+      // Asia
+      [
+        [70, 80],
+        [60, 140],
+        [20, 140],
+        [10, 100],
+        [20, 60],
+        [50, 70],
+      ],
+      // Africa
+      [
+        [35, 10],
+        [20, 50],
+        [-35, 40],
+        [-30, 20],
+        [10, 15],
+      ],
+      // South America
+      [
+        [10, -80],
+        [-10, -70],
+        [-35, -60],
+        [-55, -70],
+        [-40, -75],
+        [-10, -80],
+      ],
+      // Australia
+      [
+        [-10, 115],
+        [-35, 150],
+        [-40, 140],
+        [-35, 115],
+      ],
+    ];
+
+    continentalPaths.forEach((path) => {
+      const points = path.map(([lat, lon]) => {
+        const latRad = lat * (Math.PI / 180);
+        const lonRad = lon * (Math.PI / 180);
+        return new THREE.Vector3(
+          earthRadius * 1.01 * Math.cos(latRad) * Math.cos(lonRad),
+          earthRadius * 1.01 * Math.sin(latRad),
+          earthRadius * 1.01 * Math.cos(latRad) * Math.sin(lonRad)
+        );
+      });
+
+      const outlineGeo = new THREE.BufferGeometry().setFromPoints(points);
+      const outlineMat = new THREE.LineBasicMaterial({
+        color: isDark ? 0x003322 : 0x224433,
+        transparent: true,
+        opacity: 0.3,
+      });
+      const outlineLine = new THREE.LineLoop(outlineGeo, outlineMat);
+      scene.add(outlineLine);
+    });
 
     // --- Animation Loop ---
     let mouseX = 0;
@@ -239,75 +458,67 @@ const CyberNetworkBackground = ({ isDark }) => {
     const animate = () => {
       requestAnimationFrame(animate);
 
-      // Camera drift
-      camera.position.x += (mouseX * 3 - camera.position.x) * 0.02;
-      camera.position.y += (mouseY * 3 + 10 - camera.position.y) * 0.02;
+      // Cinematic camera orbit
+      camera.position.x += (mouseX * 30 - camera.position.x) * 0.02;
+      camera.position.y += (mouseY * 30 + 20 - camera.position.y) * 0.02;
       camera.lookAt(scene.position);
 
-      const linePositions = [];
-      const connectedPairs = [];
+      // Rotate Earth slowly
+      earthMesh.rotation.y += 0.001;
+      atmosphereMesh.rotation.y += 0.001;
 
-      // Update Nodes
-      nodes.forEach((node, i) => {
-        // Rotate node itself
-        node.rotation.x += node.userData.rotSpeed.x;
-        node.rotation.y += node.userData.rotSpeed.y;
-
-        // Move node
-        node.position.add(node.userData.velocity);
-
-        // Boundary bounce
-        if (Math.abs(node.position.x) > 45) node.userData.velocity.x *= -1;
-        if (Math.abs(node.position.y) > 25) node.userData.velocity.y *= -1;
-        if (Math.abs(node.position.z) > 25) node.userData.velocity.z *= -1;
-
-        // Find connections
-        for (let j = i + 1; j < nodeCount; j++) {
-          const nodeB = nodes[j];
-          const dist = node.position.distanceTo(nodeB.position);
-
-          if (dist < 18) {
-            linePositions.push(
-              node.position.x,
-              node.position.y,
-              node.position.z,
-              nodeB.position.x,
-              nodeB.position.y,
-              nodeB.position.z
-            );
-            connectedPairs.push({ start: node.position, end: nodeB.position });
-          }
-        }
+      // Pulse nodes
+      nodes.forEach((node) => {
+        node.pulsePhase += node.pulseSpeed;
+        const pulse = 1 + Math.sin(node.pulsePhase) * 0.3;
+        node.mesh.scale.setScalar(pulse);
+        node.glow.scale.setScalar(pulse * 0.8);
       });
 
-      linesGeometry.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(linePositions, 3)
-      );
+      // Pulse streams randomly
+      streams.forEach((stream) => {
+        if (Math.random() > 0.98) {
+          stream.opacity = 0.6;
+        }
+        stream.opacity *= 0.95;
+        stream.line.material.opacity = Math.max(0.2, stream.opacity);
+      });
 
-      // Animate Packets
+      // Animate packets
       packets.forEach((packet) => {
-        if (!packet.active && connectedPairs.length > 0) {
-          const route =
-            connectedPairs[Math.floor(Math.random() * connectedPairs.length)];
-          packet.pathStart.copy(route.start);
-          packet.pathEnd.copy(route.end);
+        if (!packet.active) {
+          const stream = streams[Math.floor(Math.random() * streams.length)];
+          packet.stream = stream.line;
           packet.progress = 0;
           packet.active = true;
           packet.mesh.visible = true;
+          packet.tail.visible = true;
         }
 
-        if (packet.active) {
+        if (packet.active && packet.stream) {
           packet.progress += packet.speed;
-          packet.mesh.position.lerpVectors(
-            packet.pathStart,
-            packet.pathEnd,
-            packet.progress
-          );
 
-          if (packet.progress >= 1) {
+          const points = packet.stream.geometry.attributes.position;
+          const totalPoints = points.count;
+          const index = Math.floor(packet.progress * totalPoints);
+
+          if (index < totalPoints - 1) {
+            packet.mesh.position.set(
+              points.getX(index),
+              points.getY(index),
+              points.getZ(index)
+            );
+
+            const tailIndex = Math.max(0, index - 3);
+            packet.tail.position.set(
+              points.getX(tailIndex),
+              points.getY(tailIndex),
+              points.getZ(tailIndex)
+            );
+          } else {
             packet.active = false;
             packet.mesh.visible = false;
+            packet.tail.visible = false;
           }
         }
       });
@@ -327,15 +538,37 @@ const CyberNetworkBackground = ({ isDark }) => {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
-      if (containerRef.current) {
+      if (
+        containerRef.current &&
+        renderer.domElement.parentNode === containerRef.current
+      ) {
         containerRef.current.removeChild(renderer.domElement);
       }
-      geometry.dispose();
-      material.dispose();
-      linesGeometry.dispose();
-      linesMaterial.dispose();
-      packetGeo.dispose();
-      packetMat.dispose();
+
+      // Dispose resources
+      nodes.forEach((node) => {
+        if (node.mesh.geometry) node.mesh.geometry.dispose();
+        if (node.mesh.material) node.mesh.material.dispose();
+        if (node.glow.geometry) node.glow.geometry.dispose();
+        if (node.glow.material) node.glow.material.dispose();
+      });
+      streams.forEach((stream) => {
+        if (stream.line.geometry) stream.line.geometry.dispose();
+        if (stream.line.material) stream.line.material.dispose();
+      });
+      packets.forEach((packet) => {
+        if (packet.mesh.geometry) packet.mesh.geometry.dispose();
+        if (packet.mesh.material) packet.mesh.material.dispose();
+        if (packet.tail.geometry) packet.tail.geometry.dispose();
+        if (packet.tail.material) packet.tail.material.dispose();
+      });
+      earthGeo.dispose();
+      earthMat.dispose();
+      atmosphereGeo.dispose();
+      atmosphereMat.dispose();
+      starsGeo.dispose();
+      starsMat.dispose();
+      renderer.dispose();
     };
   }, [isDark]);
 
@@ -426,10 +659,10 @@ export default function Portfolio() {
   return (
     <div
       className={`min-h-screen font-mono transition-colors duration-500 ${
-        isDark ? "bg-[#050505] text-slate-300" : "bg-slate-50 text-slate-800"
+        isDark ? "text-slate-300" : "text-slate-800"
       }`}
     >
-      {/* 3D Cyber Network */}
+      {/* 3D Kubernetes Pods Network */}
       <CyberNetworkBackground isDark={isDark} />
 
       {/* Terminal Navbar */}
@@ -613,11 +846,13 @@ export default function Portfolio() {
                 >
                   <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
-                  <img
-                    src="/profile.jpg"
-                    alt="Vibek Dutta"
-                    className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100`}
-                  />
+                  <div
+                    className={`w-full h-full flex items-center justify-center text-6xl font-bold ${
+                      isDark ? "text-green-500/20" : "text-blue-500/20"
+                    }`}
+                  >
+                    VD
+                  </div>
                   <div
                     className={`absolute bottom-2 right-2 text-xs font-bold px-2 py-1 rounded ${
                       isDark
