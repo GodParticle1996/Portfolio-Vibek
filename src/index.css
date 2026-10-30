@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(74, 222, 128, 0.4) transparent;
+  }
+
+  /* Matches the globe's space background, so there's no white flash before WebGL starts */
+  body {
+    background-color: #05070a;
+  }
+
+  ::selection {
+    background: rgba(74, 222, 128, 0.35);
+    color: #fff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
