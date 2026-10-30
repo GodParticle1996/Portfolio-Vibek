@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Moon,
   Sun,
   Cpu,
-  Mail,
   Globe,
-  Phone,
   MapPin,
-  Shield,
   Github,
   Network,
   Database,
@@ -15,31 +12,37 @@ import {
   Download,
   Terminal,
   ChevronDown,
-  ExternalLink,
 } from "lucide-react";
 import * as THREE from "three";
 
 const resumeData = {
   personal: {
     name: "Vibek Dutta",
-    role: "Solutions Architect | Fullstack Developer",
-    location: "Waterloo, ON, CA",
+    titles: [
+      "Fullstack Developer",
+      "Cloud & DevOps Engineer",
+      "Node.js | NestJS | React | TypeScript",
+      "Go | AWS | Kubernetes | Terraform",
+    ],
+    location: "Toronto, ON, CA",
     email: "vibekdutta3096@gmail.com",
     phone: "+1548-577-1180",
     linkedin: "vibekdutta",
     github: "GodParticle1996",
     summary:
-      "Root user with 4+ years of uptime. Specializing in architecting scalable distributed systems and cost-efficient cloud infrastructure. Passionate about contributing to the tech community through open-source projects and technical blogs.",
+      "Most of the bugs I've actually enjoyed chasing weren't in the code that broke. They were two or three services upstream from it, hiding behind a stack trace that pointed somewhere completely innocent. I treat misleading errors as clues, tracing logs backward to find where reality broke the code's assumptions. I've worked on syncing state across distributed systems, scaling APIs for massive traffic, and building resilient frontends designed to survive unpredictable user behavior.",
   },
   skills: {
-    languages: ["Javascript", "Typescript", "Python", "SQL"],
+    languages: ["Javascript", "Typescript", "Go", "Python", "SQL", "Solidity"],
     frontend: [
       "React.js",
       "Next.js",
       "Framer_Motion",
-      "React_Hook_Forms",
+      "React_Hook_Form",
       "Tanstack_Query",
+      "Apollo_Client",
       "Redux",
+      "Zustand",
       "Tailwind_CSS",
     ],
     backend: [
@@ -47,14 +50,23 @@ const resumeData = {
       "NestJS",
       "GraphQL",
       "gRPC",
-      "Redis",
-      "Docker",
-      "Nginx",
+      "Knex.js",
+      "Twilio",
+      "RabbitMQ",
       "Kafka",
+      "Nginx",
     ],
-    database: ["Postgres", "Redis", "MongoDB", "AstraDB", "ElasticSearch"],
+    database: ["Postgres", "MySQL", "Redis", "MongoDB", "AstraDB", "ElasticSearch"],
     devops: [
+      "Kubernetes",
+      "Helm",
+      "Docker",
+      "Terraform",
+      "Ansible",
+      "AWX",
+      "CI/CD",
       "Github_Actions",
+      "Jenkins",
       "AWS_Stack",
       "CloudFormation",
       "Grafana",
@@ -63,52 +75,81 @@ const resumeData = {
   },
   experience: [
     {
-      company: "Resso.ai",
+      company: "KPM Power Inc",
       role: "Fullstack_Developer",
-      location: "Waterloo, CA",
-      period: "2024 - Present",
+      location: "Etobicoke, CA",
+      period: "Apr 2026 - Present",
+      current: true,
       achievements: [
-        "Deployed Visualisation Dashboard (React + NestJS + Drizzle).",
-        "Integrated Twilio SMS pipeline for 10k+ daily events.",
-        "Engineered RAG pipeline (Python/AstraDB) boosting accuracy by 20%.",
-        "Orchestrated zero-downtime CI/CD via GitHub Actions & AWS Fargate.",
-        "Hardened security with JWT RBAC & MFA.",
+        "Automating infrastructure & configuration management with Ansible.",
+        "Orchestrating Ansible automation at scale through AWX.",
+        "Building and maintaining CI/CD pipelines for automated build, test & deploy.",
+        "Planning and executing data migration strategies across systems.",
+      ],
+    },
+    {
+      company: "Resso.ai",
+      role: "Cloud_Engineer",
+      location: "Ontario, CA",
+      period: "Jul 2025 - Mar 2026",
+      achievements: [
+        "Built AI recommendation platform (Python, DeepSeek, AstraDB RAG) with Redis context caching, streaming to React via SSE.",
+        "Shipped CI/CD with GitHub Actions; deployed on Docker, Kubernetes & Helm.",
+        "Automated event-driven workflows on Lambda, SQS & EventBridge, monitored via Grafana & CloudWatch.",
       ],
     },
     {
       company: "Snappymob",
       role: "Software_Engineer",
       location: "Kuala Lumpur, MY",
-      period: "2022 - 2023",
+      period: "Jun 2022 - Feb 2024",
       achievements: [
-        "Architected scalable microservices (NestJS Monorepo).",
-        "Built real-time dashboard (React + TanStack Query).",
-        "Optimized state management: Redux -> Zustand (15% bundle reduction).",
-        "Implemented CQRS pattern for 20k tx/hour payment system.",
-        "Accelerated data ingestion: 23h -> 7h via AWS Step Functions.",
+        "Rebuilt React dashboard: SSE over polling, TanStack Query, Redux -> Zustand (15% bundle reduction).",
+        "Implemented CQRS (RabbitMQ + Kafka) with Saga pattern for a 20k tx/hour payment system.",
+        "Built ingestion pipelines on Step Functions, Kinesis Firehose & Redshift: 23h -> 7h.",
       ],
     },
     {
-      company: "Kloudmate",
-      role: "Serverless_Dev",
-      location: "Bangalore, IN",
-      period: "2021 - 2022",
+      company: "RedSoft Solutions",
+      role: "Blockchain_Developer",
+      location: "Ahmedabad, IN",
+      period: "Nov 2022 - Apr 2023",
       achievements: [
-        "Developed serverless monitoring app (React + GraphQL + Lambda).",
-        "Refactored frontend for 40% load time reduction.",
-        "Implemented WebSocket sync for 30% engagement boost.",
-        "Designed fault-tolerant SQS/DLQ processing with exponential backoff.",
+        "Developed NFT marketplace on Polygon (Solidity, Hardhat) with ERC721 assets & ERC1155 perks.",
+        "Built Node.js/TypeScript backend with Alchemy & Ethers.js for wallet auth and on-chain event processing.",
+        "Integrated Chainlink Price Feeds & VRF; MongoDB change streams for real-time metadata.",
+      ],
+    },
+    {
+      company: "KloudMate",
+      role: "Fullstack_Web_Developer",
+      location: "Bengaluru, IN",
+      period: "Jul 2021 - May 2022",
+      achievements: [
+        "Built React + Apollo frontend with WebSocket sync (30% engagement boost).",
+        "Developed AWS Step Functions visualizer (React + D3.js) with X-Ray traces.",
+        "Architected log pipeline (CloudWatch, Kinesis, Elasticsearch, Athena) and blue-green ECS releases.",
       ],
     },
     {
       company: "Cyborn Ltd.",
-      role: "Web_Developer",
-      location: "Bangalore, IN",
-      period: "2020 - 2020",
+      role: "Fullstack_Web_Developer",
+      location: "Bengaluru, IN",
+      period: "Aug 2020 - Jun 2021",
       achievements: [
-        "Built ANOM dashboard (React + Redux Toolkit).",
-        "Integrated Stripe Gateway ($100k+ monthly throughput).",
-        "Migrated Neo4j -> AWS RDS (30% latency reduction).",
+        "Built real-time monitoring dashboards (Angular, RxJS).",
+        "Automated Stripe billing with webhooks & retries ($100k+ monthly throughput).",
+        "Migrated Neo4j -> AWS RDS PostgreSQL via Python (30% latency reduction).",
+      ],
+    },
+    {
+      company: "zekeLabs",
+      role: "Deep_Learning_Intern",
+      location: "Bengaluru, IN",
+      period: "May 2018 - Aug 2018",
+      achievements: [
+        "Orchestrated ETL workflows on Step Functions, Glue, Athena & S3 data lakes.",
+        "Trained PyTorch CNN/LSTM models; containerized ML services with Docker Compose.",
       ],
     },
   ],
@@ -131,12 +172,58 @@ const resumeData = {
   ],
 };
 
+const prefersReducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Types each phrase out, holds, deletes it and moves on to the next one
+const useTypewriter = (phrases, typeMs = 70, deleteMs = 35, holdMs = 1600) => {
+  const [text, setText] = useState(
+    prefersReducedMotion() ? phrases[0] : ""
+  );
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+
+    let index = 0;
+    let length = 0;
+    let deleting = false;
+    let timer;
+
+    const tick = () => {
+      const phrase = phrases[index];
+      length += deleting ? -1 : 1;
+      setText(phrase.slice(0, length));
+
+      let delay = deleting ? deleteMs : typeMs;
+      if (!deleting && length === phrase.length) {
+        deleting = true;
+        delay = holdMs;
+      } else if (deleting && length === 0) {
+        deleting = false;
+        index = (index + 1) % phrases.length;
+        delay = 400;
+      }
+      timer = setTimeout(tick, delay);
+    };
+
+    timer = setTimeout(tick, 600);
+    return () => clearTimeout(timer);
+  }, [phrases, typeMs, deleteMs, holdMs]);
+
+  return text;
+};
+
 // --- Three.js Earth CDN Network Background ---
 const CyberNetworkBackground = ({ isDark }) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Lighter scene on small screens
+    const isMobile = window.innerWidth < 768;
+    const quality = isMobile ? 0.4 : 1;
 
     const scene = new THREE.Scene();
     // Space background
@@ -154,12 +241,23 @@ const CyberNetworkBackground = ({ isDark }) => {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    containerRef.current.appendChild(renderer.domElement);
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2)
+    );
+    container.appendChild(renderer.domElement);
+
+    // Everything on the globe lives in one group so it spins (and drags) together
+    const globe = new THREE.Group();
+    scene.add(globe);
 
     // --- Earth Globe ---
     const earthRadius = 20;
-    const earthGeo = new THREE.SphereGeometry(earthRadius, 64, 64);
+    const earthSegments = isMobile ? 32 : 64;
+    const earthGeo = new THREE.SphereGeometry(
+      earthRadius,
+      earthSegments,
+      earthSegments
+    );
 
     // Dark earth material (night side)
     const earthMat = new THREE.MeshBasicMaterial({
@@ -168,10 +266,14 @@ const CyberNetworkBackground = ({ isDark }) => {
       opacity: 0.9,
     });
     const earthMesh = new THREE.Mesh(earthGeo, earthMat);
-    scene.add(earthMesh);
+    globe.add(earthMesh);
 
     // Atmosphere glow
-    const atmosphereGeo = new THREE.SphereGeometry(earthRadius * 1.15, 64, 64);
+    const atmosphereGeo = new THREE.SphereGeometry(
+      earthRadius * 1.15,
+      earthSegments,
+      earthSegments
+    );
     const atmosphereMat = new THREE.MeshBasicMaterial({
       color: isDark ? 0x00aaff : 0x4a9eff,
       transparent: true,
@@ -180,11 +282,30 @@ const CyberNetworkBackground = ({ isDark }) => {
       blending: THREE.AdditiveBlending,
     });
     const atmosphereMesh = new THREE.Mesh(atmosphereGeo, atmosphereMat);
-    scene.add(atmosphereMesh);
+    globe.add(atmosphereMesh);
 
     // --- CDN Edge Nodes (Glowing Points on Globe) ---
-    const nodeCount = 400;
     const nodes = [];
+
+    // One unit sphere + a pair of materials per colour, shared by every node
+    const unitGeo = new THREE.SphereGeometry(1, 8, 8);
+    const makeNodeMaterials = (color) => ({
+      core: new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+      }),
+      glow: new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity: 0.3,
+        blending: THREE.AdditiveBlending,
+      }),
+    });
+    // Green and greenish-yellow colors
+    const greenNodeMats = makeNodeMaterials(isDark ? 0x00ff66 : 0x00ff88);
+    const yellowNodeMats = makeNodeMaterials(isDark ? 0xaaff00 : 0xd4ff00);
 
     // Generate nodes based on population density patterns
     const continents = [
@@ -207,7 +328,8 @@ const CyberNetworkBackground = ({ isDark }) => {
     ];
 
     continents.forEach((continent) => {
-      for (let i = 0; i < continent.density; i++) {
+      const count = Math.max(1, Math.round(continent.density * quality));
+      for (let i = 0; i < count; i++) {
         const lat =
           (continent.lat + (Math.random() - 0.5) * 30) * (Math.PI / 180);
         const lon =
@@ -217,47 +339,26 @@ const CyberNetworkBackground = ({ isDark }) => {
         const y = earthRadius * Math.sin(lat);
         const z = earthRadius * Math.cos(lat) * Math.sin(lon);
 
-        // Node glow
         const nodeSize = 0.15 + Math.random() * 0.25;
-        const nodeGeo = new THREE.SphereGeometry(nodeSize, 8, 8);
+        const mats = Math.random() > 0.6 ? yellowNodeMats : greenNodeMats;
 
-        // Green and greenish-yellow colors
-        const isYellow = Math.random() > 0.6;
-        const nodeColor = isDark
-          ? isYellow
-            ? 0xaaff00
-            : 0x00ff66
-          : isYellow
-          ? 0xd4ff00
-          : 0x00ff88;
-
-        const nodeMat = new THREE.MeshBasicMaterial({
-          color: nodeColor,
-          transparent: true,
-          opacity: 0.9,
-          blending: THREE.AdditiveBlending,
-        });
-
-        const nodeMesh = new THREE.Mesh(nodeGeo, nodeMat);
+        // Node glow
+        const nodeMesh = new THREE.Mesh(unitGeo, mats.core);
         nodeMesh.position.set(x, y, z);
+        nodeMesh.scale.setScalar(nodeSize);
 
         // Outer glow
-        const glowGeo = new THREE.SphereGeometry(nodeSize * 2.5, 8, 8);
-        const glowMat = new THREE.MeshBasicMaterial({
-          color: nodeColor,
-          transparent: true,
-          opacity: 0.3,
-          blending: THREE.AdditiveBlending,
-        });
-        const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+        const glowMesh = new THREE.Mesh(unitGeo, mats.glow);
         glowMesh.position.set(x, y, z);
+        glowMesh.scale.setScalar(nodeSize * 2.5);
 
-        scene.add(nodeMesh);
-        scene.add(glowMesh);
+        globe.add(nodeMesh);
+        globe.add(glowMesh);
 
         nodes.push({
           mesh: nodeMesh,
           glow: glowMesh,
+          size: nodeSize,
           position: new THREE.Vector3(x, y, z),
           pulsePhase: Math.random() * Math.PI * 2,
           pulseSpeed: 0.02 + Math.random() * 0.03,
@@ -266,7 +367,7 @@ const CyberNetworkBackground = ({ isDark }) => {
     });
 
     // --- Orbital Data Streams (Curved Lines) ---
-    const streamCount = 80;
+    const streamCount = Math.round(80 * quality);
     const streams = [];
 
     for (let i = 0; i < streamCount; i++) {
@@ -297,7 +398,7 @@ const CyberNetworkBackground = ({ isDark }) => {
       });
 
       const streamLine = new THREE.Line(streamGeo, streamMat);
-      scene.add(streamLine);
+      globe.add(streamLine);
 
       streams.push({
         line: streamLine,
@@ -306,31 +407,31 @@ const CyberNetworkBackground = ({ isDark }) => {
     }
 
     // --- Data Packets (Moving along streams) ---
-    const packetCount = 150;
+    const packetCount = Math.round(150 * quality);
     const packets = [];
 
-    for (let i = 0; i < packetCount; i++) {
-      const packetGeo = new THREE.SphereGeometry(0.2, 6, 6);
-      const packetMat = new THREE.MeshBasicMaterial({
-        color: isDark ? 0xffffff : 0xaaffaa,
-        transparent: true,
-        opacity: 0.9,
-        blending: THREE.AdditiveBlending,
-      });
-      const packetMesh = new THREE.Mesh(packetGeo, packetMat);
+    const packetGeo = new THREE.SphereGeometry(0.2, 6, 6);
+    const packetMat = new THREE.MeshBasicMaterial({
+      color: isDark ? 0xffffff : 0xaaffaa,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending,
+    });
+    // Tail trail
+    const tailGeo = new THREE.SphereGeometry(0.3, 6, 6);
+    const tailMat = new THREE.MeshBasicMaterial({
+      color: isDark ? 0x00ff66 : 0x00ff88,
+      transparent: true,
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending,
+    });
 
-      // Tail trail
-      const tailGeo = new THREE.SphereGeometry(0.3, 6, 6);
-      const tailMat = new THREE.MeshBasicMaterial({
-        color: isDark ? 0x00ff66 : 0x00ff88,
-        transparent: true,
-        opacity: 0.4,
-        blending: THREE.AdditiveBlending,
-      });
+    for (let i = 0; i < packetCount; i++) {
+      const packetMesh = new THREE.Mesh(packetGeo, packetMat);
       const tailMesh = new THREE.Mesh(tailGeo, tailMat);
 
-      scene.add(packetMesh);
-      scene.add(tailMesh);
+      globe.add(packetMesh);
+      globe.add(tailMesh);
 
       packets.push({
         mesh: packetMesh,
@@ -343,7 +444,7 @@ const CyberNetworkBackground = ({ isDark }) => {
     }
 
     // --- Star Field ---
-    const starCount = 2000;
+    const starCount = isMobile ? 800 : 2000;
     const starsGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
 
@@ -367,7 +468,7 @@ const CyberNetworkBackground = ({ isDark }) => {
     scene.add(stars);
 
     // --- Continental Outlines (Subtle lines) ---
-    const outlinePoints = [];
+    const outlines = [];
 
     // Simple continental approximations
     const continentalPaths = [
@@ -442,37 +543,73 @@ const CyberNetworkBackground = ({ isDark }) => {
         opacity: 0.3,
       });
       const outlineLine = new THREE.LineLoop(outlineGeo, outlineMat);
-      scene.add(outlineLine);
+      globe.add(outlineLine);
+      outlines.push(outlineLine);
     });
 
-    // --- Animation Loop ---
+    // --- Interaction ---
     let mouseX = 0;
     let mouseY = 0;
+
+    // Drag empty space to spin the globe; it keeps some momentum on release
+    const autoSpin = prefersReducedMotion() ? 0 : 0.001;
+    let dragging = false;
+    let lastX = 0;
+    let spin = 0;
+
+    const handleMouseDown = (event) => {
+      if (event.target.closest("a, button, nav, [data-card]")) return;
+      dragging = true;
+      lastX = event.clientX;
+      document.body.style.userSelect = "none";
+      document.body.style.cursor = "grabbing";
+    };
 
     const handleMouseMove = (event) => {
       mouseX = (event.clientX / window.innerWidth) * 2 - 1;
       mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      if (dragging) {
+        spin = THREE.MathUtils.clamp((event.clientX - lastX) * 0.004, -0.2, 0.2);
+        globe.rotation.y += spin;
+        lastX = event.clientX;
+      }
     };
+
+    const handleMouseUp = () => {
+      if (!dragging) return;
+      dragging = false;
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+    };
+
+    window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    // --- Animation Loop ---
+    let frameId = 0;
 
     const animate = () => {
-      requestAnimationFrame(animate);
+      frameId = requestAnimationFrame(animate);
 
       // Cinematic camera orbit
       camera.position.x += (mouseX * 30 - camera.position.x) * 0.02;
       camera.position.y += (mouseY * 30 + 20 - camera.position.y) * 0.02;
       camera.lookAt(scene.position);
 
-      // Rotate Earth slowly
-      earthMesh.rotation.y += 0.001;
-      atmosphereMesh.rotation.y += 0.001;
+      // Rotate Earth slowly (unless it's being dragged)
+      if (!dragging) {
+        globe.rotation.y += autoSpin + spin;
+        spin *= 0.95;
+      }
 
       // Pulse nodes
       nodes.forEach((node) => {
         node.pulsePhase += node.pulseSpeed;
         const pulse = 1 + Math.sin(node.pulsePhase) * 0.3;
-        node.mesh.scale.setScalar(pulse);
-        node.glow.scale.setScalar(pulse * 0.8);
+        node.mesh.scale.setScalar(node.size * pulse);
+        node.glow.scale.setScalar(node.size * 2.5 * pulse * 0.8);
       });
 
       // Pulse streams randomly
@@ -528,6 +665,13 @@ const CyberNetworkBackground = ({ isDark }) => {
 
     animate();
 
+    // Don't burn CPU/GPU while the tab is in the background
+    const handleVisibility = () => {
+      cancelAnimationFrame(frameId);
+      if (!document.hidden) animate();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -536,32 +680,36 @@ const CyberNetworkBackground = ({ isDark }) => {
     window.addEventListener("resize", handleResize);
 
     return () => {
+      cancelAnimationFrame(frameId);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("resize", handleResize);
-      if (
-        containerRef.current &&
-        renderer.domElement.parentNode === containerRef.current
-      ) {
-        containerRef.current.removeChild(renderer.domElement);
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+      if (renderer.domElement.parentNode === container) {
+        container.removeChild(renderer.domElement);
       }
 
       // Dispose resources
-      nodes.forEach((node) => {
-        if (node.mesh.geometry) node.mesh.geometry.dispose();
-        if (node.mesh.material) node.mesh.material.dispose();
-        if (node.glow.geometry) node.glow.geometry.dispose();
-        if (node.glow.material) node.glow.material.dispose();
+      unitGeo.dispose();
+      [greenNodeMats, yellowNodeMats].forEach((mats) => {
+        mats.core.dispose();
+        mats.glow.dispose();
       });
       streams.forEach((stream) => {
-        if (stream.line.geometry) stream.line.geometry.dispose();
-        if (stream.line.material) stream.line.material.dispose();
+        stream.line.geometry.dispose();
+        stream.line.material.dispose();
       });
-      packets.forEach((packet) => {
-        if (packet.mesh.geometry) packet.mesh.geometry.dispose();
-        if (packet.mesh.material) packet.mesh.material.dispose();
-        if (packet.tail.geometry) packet.tail.geometry.dispose();
-        if (packet.tail.material) packet.tail.material.dispose();
+      outlines.forEach((outline) => {
+        outline.geometry.dispose();
+        outline.material.dispose();
       });
+      packetGeo.dispose();
+      packetMat.dispose();
+      tailGeo.dispose();
+      tailMat.dispose();
       earthGeo.dispose();
       earthMat.dispose();
       atmosphereGeo.dispose();
@@ -580,30 +728,106 @@ const CyberNetworkBackground = ({ isDark }) => {
   );
 };
 
+// Fades + slides its children in the first time they scroll into view
+const Reveal = ({ children, className = "", delay = 0 }) => {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(
+    () => prefersReducedMotion() || !("IntersectionObserver" in window)
+  );
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || visible) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [visible]);
+
+  return (
+    <div
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`transition-[opacity,transform] duration-700 ease-out ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
+
 // --- Terminal Glass Components ---
-const TerminalCard = ({ children, className = "", isDark }) => (
-  <div
-    className={`
-    relative overflow-hidden rounded-md border backdrop-blur-md transition-all duration-300 font-mono
+// `tilt` is the max tilt in degrees; 0 keeps the card flat (spotlight only)
+const TerminalCard = ({ children, className = "", isDark, tilt = 0 }) => {
+  const cardRef = useRef(null);
+
+  const handleMouseMove = (event) => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    card.style.setProperty("--mx", `${x}px`);
+    card.style.setProperty("--my", `${y}px`);
+
+    if (tilt && !prefersReducedMotion()) {
+      const rotateX = (0.5 - y / rect.height) * tilt * 2;
+      const rotateY = (x / rect.width - 0.5) * tilt * 2;
+      card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (cardRef.current) cardRef.current.style.transform = "";
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      data-card
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`
+    group/card relative overflow-hidden rounded-md border backdrop-blur-md transition-all duration-300 font-mono
     ${
       isDark
-        ? "bg-[#0d1117]/70 border-green-500/20 shadow-[0_0_15px_rgba(74,222,128,0.1)] text-slate-300 hover:border-green-500/40 hover:bg-[#0d1117]/80"
-        : "bg-white/70 border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.1)] text-slate-800 hover:border-blue-500/40 hover:bg-white/80"
+        ? "bg-[#0d1117]/70 border-green-500/20 shadow-[0_0_15px_rgba(74,222,128,0.1)] text-slate-300 hover:border-green-500/40 hover:bg-[#0d1117]/80 hover:shadow-[0_0_28px_rgba(74,222,128,0.18)]"
+        : "bg-white/70 border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.1)] text-slate-800 hover:border-blue-500/40 hover:bg-white/80 hover:shadow-[0_0_28px_rgba(59,130,246,0.18)]"
     }
     ${className}
   `}
-  >
-    {/* Terminal Header Bar Strip */}
-    <div
-      className={`absolute top-0 left-0 w-full h-1 opacity-50 ${
-        isDark
-          ? "bg-gradient-to-r from-green-500 to-transparent"
-          : "bg-gradient-to-r from-blue-500 to-transparent"
-      }`}
-    ></div>
-    {children}
-  </div>
-);
+    >
+      {/* Cursor spotlight */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
+        style={{
+          background: `radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), ${
+            isDark ? "rgba(74,222,128,0.10)" : "rgba(59,130,246,0.10)"
+          }, transparent 70%)`,
+        }}
+      ></div>
+      {/* Terminal Header Bar Strip */}
+      <div
+        className={`absolute top-0 left-0 w-full h-1 opacity-50 ${
+          isDark
+            ? "bg-gradient-to-r from-green-500 to-transparent"
+            : "bg-gradient-to-r from-blue-500 to-transparent"
+        }`}
+      ></div>
+      {children}
+    </div>
+  );
+};
 
 const TerminalHeader = ({ title, icon: Icon, isDark }) => (
   <div className="flex items-center gap-3 mb-6 border-b border-dashed pb-2 border-opacity-30 border-gray-500">
@@ -618,7 +842,9 @@ const TerminalHeader = ({ title, icon: Icon, isDark }) => (
     </div>
     <h2
       className={`text-xl font-bold tracking-tight font-mono ${
-        isDark ? "text-green-400" : "text-blue-600"
+        isDark
+          ? "text-green-400 [text-shadow:0_0_14px_rgba(74,222,128,0.45)]"
+          : "text-blue-600"
       }`}
     >
       <span className="opacity-50 mr-2">{">_"}</span>
@@ -633,28 +859,65 @@ const CodeBadge = ({ text, isDark }) => (
     px-2 py-1 text-xs rounded border font-mono tracking-wide
     ${
       isDark
-        ? "bg-[#161b22] border-green-500/30 text-green-300 hover:bg-green-500/10"
+        ? "bg-[#161b22] border-green-500/30 text-green-300 hover:bg-green-500/10 hover:shadow-[0_0_10px_rgba(74,222,128,0.35)]"
         : "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
     }
-    transition-colors cursor-default
+    transition-all cursor-default
   `}
   >
     {text}
   </span>
 );
 
+const SECTION_IDS = ["about", "skills", "experience", "education"];
+
 // --- Main App Component ---
 export default function Portfolio() {
   const [isDark, setIsDark] = useState(true);
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("about");
+  const progressRef = useRef(null);
+  const title = useTypewriter(resumeData.personal.titles);
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
-      setActiveSection(id);
     }
   };
+
+  // Highlight the nav item for the section in the middle of the viewport
+  // and drive the scroll progress bar
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    SECTION_IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    const handleScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? window.scrollY / max : 0;
+      if (progressRef.current) {
+        progressRef.current.style.transform = `scaleX(${progress})`;
+      }
+      // The last section can be too short to reach the middle of the viewport
+      if (max > 0 && window.scrollY >= max - 4) setActiveSection("education");
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div
@@ -700,22 +963,17 @@ export default function Portfolio() {
           <div className="hidden md:flex items-center gap-6">
             {["~/about", "~/skills", "~/experience", "~/edu"].map(
               (item, index) => {
-                const sectionName = [
-                  "about",
-                  "skills",
-                  "experience",
-                  "education",
-                ][index];
+                const sectionName = SECTION_IDS[index];
                 return (
                   <button
                     key={item}
                     onClick={() => scrollTo(sectionName)}
-                    className={`text-sm hover:underline underline-offset-4 decoration-2 transition-all 
+                    className={`text-sm hover:underline underline-offset-4 decoration-2 transition-all
                     ${
                       activeSection === sectionName
                         ? isDark
-                          ? "text-green-400 decoration-green-500"
-                          : "text-blue-600 decoration-blue-600"
+                          ? "text-green-400 underline decoration-green-500"
+                          : "text-blue-600 underline decoration-blue-600"
                         : "opacity-60 hover:opacity-100"
                     }`}
                   >
@@ -737,6 +995,16 @@ export default function Portfolio() {
             {isDark ? <Sun size={16} /> : <Moon size={16} />}
           </button>
         </div>
+
+        {/* Scroll progress */}
+        <div
+          ref={progressRef}
+          className={`absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 ${
+            isDark
+              ? "bg-gradient-to-r from-green-500 to-cyan-400 shadow-[0_0_8px_rgba(74,222,128,0.8)]"
+              : "bg-gradient-to-r from-blue-600 to-cyan-500"
+          }`}
+        ></div>
       </nav>
 
       {/* Main Content */}
@@ -765,23 +1033,43 @@ export default function Portfolio() {
                   </p>
 
                   {/* Name ASCII Art Style Effect */}
-                  <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 relative inline-block">
+                  <h1
+                    className={`text-4xl md:text-6xl font-bold tracking-tight mb-4 relative inline-block ${
+                      isDark
+                        ? "[text-shadow:0_0_28px_rgba(74,222,128,0.35)]"
+                        : ""
+                    }`}
+                  >
                     {resumeData.personal.name}
                     <span
                       className={`absolute -bottom-2 left-0 w-full h-1 ${
-                        isDark ? "bg-green-500" : "bg-blue-600"
+                        isDark
+                          ? "bg-green-500 shadow-[0_0_14px_rgba(74,222,128,0.8)]"
+                          : "bg-blue-600 shadow-[0_0_14px_rgba(37,99,235,0.5)]"
                       }`}
                     ></span>
                   </h1>
 
-                  <div className="flex items-center gap-2 text-xl md:text-2xl mt-4">
+                  <div className="flex items-start gap-2 text-xl md:text-2xl mt-4 min-h-[3.5rem] md:min-h-[2.25rem]">
                     <span className="opacity-50">&gt;</span>
-                    <span
-                      className={`${
-                        isDark ? "text-cyan-400" : "text-cyan-600"
-                      }`}
-                    >
-                      {resumeData.personal.role}
+                    <span className="sr-only">
+                      {resumeData.personal.titles.slice(0, 2).join(", ")}
+                    </span>
+                    <span aria-hidden="true">
+                      <span
+                        className={`${
+                          isDark ? "text-cyan-400" : "text-cyan-600"
+                        }`}
+                      >
+                        {title}
+                      </span>
+                      <span
+                        className={`animate-pulse ml-0.5 ${
+                          isDark ? "text-green-500" : "text-blue-600"
+                        }`}
+                      >
+                        _
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -805,14 +1093,15 @@ export default function Portfolio() {
                     className={`flex items-center gap-2 px-6 py-3 rounded border font-bold transition-all
                      ${
                        isDark
-                         ? "bg-green-500/10 border-green-500 text-green-400 hover:bg-green-500 hover:text-black"
+                         ? "bg-green-500/10 border-green-500 text-green-400 hover:bg-green-500 hover:text-black hover:shadow-[0_0_20px_rgba(74,222,128,0.5)]"
                          : "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
                      }`}
                   >
                     <Terminal size={18} /> ./contact_me.sh
                   </a>
                   <a
-                    href="#"
+                    href={`${import.meta.env.BASE_URL}Vibek_Dutta_CV.pdf`}
+                    download="Vibek_Dutta_CV.pdf"
                     className={`flex items-center gap-2 px-6 py-3 rounded border transition-colors ${
                       isDark
                         ? "border-gray-700 hover:border-gray-500"
@@ -835,7 +1124,7 @@ export default function Portfolio() {
 
               {/* Stats/Social Column */}
               <div className="flex flex-col gap-6">
-                {/* Profile/Avatar Placeholder - stylized as code block */}
+                {/* Profile photo in a dashed terminal frame */}
                 <div
                   className={`aspect-square rounded border-2 border-dashed flex items-center justify-center relative overflow-hidden group
                     ${
@@ -844,15 +1133,21 @@ export default function Portfolio() {
                         : "border-blue-500/30 bg-white"
                     }`}
                 >
-                  <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-
+                  <img
+                    src={`${import.meta.env.BASE_URL}profile.jpg`}
+                    alt="Vibek Dutta"
+                    width="640"
+                    height="640"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover opacity-90 transition duration-500 group-hover:opacity-100 group-hover:scale-105"
+                  />
                   <div
-                    className={`w-full h-full flex items-center justify-center text-6xl font-bold ${
-                      isDark ? "text-green-500/20" : "text-blue-500/20"
+                    className={`absolute inset-0 bg-gradient-to-t ${
+                      isDark
+                        ? "from-[#0d1117]/70 via-transparent to-transparent"
+                        : "from-white/40 via-transparent to-transparent"
                     }`}
-                  >
-                    VD
-                  </div>
+                  ></div>
                   <div
                     className={`absolute bottom-2 right-2 text-xs font-bold px-2 py-1 rounded ${
                       isDark
@@ -906,106 +1201,132 @@ export default function Portfolio() {
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className="mb-32">
-          <TerminalHeader title="cat skills.json" icon={Cpu} isDark={isDark} />
+        <section id="skills" className="mb-32 scroll-mt-24">
+          <Reveal>
+            <TerminalHeader
+              title="cat skills.json"
+              icon={Cpu}
+              isDark={isDark}
+            />
+          </Reveal>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <TerminalCard isDark={isDark} className="p-6">
-              <div className="mb-4">
-                <span
-                  className={`text-sm font-bold block mb-1 ${
-                    isDark ? "text-pink-400" : "text-pink-600"
-                  }`}
-                >
-                  // Frontend Architecture
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {resumeData.skills.frontend.map((skill) => (
-                  <CodeBadge key={skill} text={skill} isDark={isDark} />
-                ))}
-              </div>
-            </TerminalCard>
+            <Reveal className="h-full">
+              <TerminalCard isDark={isDark} tilt={3} className="p-6 h-full">
+                <div className="mb-4">
+                  <span
+                    className={`text-sm font-bold block mb-1 ${
+                      isDark ? "text-pink-400" : "text-pink-600"
+                    }`}
+                  >
+                    // Frontend Architecture
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {resumeData.skills.frontend.map((skill) => (
+                    <CodeBadge key={skill} text={skill} isDark={isDark} />
+                  ))}
+                </div>
+              </TerminalCard>
+            </Reveal>
 
-            <TerminalCard isDark={isDark} className="p-6">
-              <div className="mb-4">
-                <span
-                  className={`text-sm font-bold block mb-1 ${
-                    isDark ? "text-emerald-400" : "text-emerald-600"
-                  }`}
-                >
-                  // Backend Microservices
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {resumeData.skills.backend.map((skill) => (
-                  <CodeBadge key={skill} text={skill} isDark={isDark} />
-                ))}
-              </div>
-            </TerminalCard>
+            <Reveal className="h-full" delay={100}>
+              <TerminalCard isDark={isDark} tilt={3} className="p-6 h-full">
+                <div className="mb-4">
+                  <span
+                    className={`text-sm font-bold block mb-1 ${
+                      isDark ? "text-emerald-400" : "text-emerald-600"
+                    }`}
+                  >
+                    // Backend Microservices
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {resumeData.skills.backend.map((skill) => (
+                    <CodeBadge key={skill} text={skill} isDark={isDark} />
+                  ))}
+                </div>
+              </TerminalCard>
+            </Reveal>
 
-            <TerminalCard isDark={isDark} className="p-6">
-              <div className="mb-4">
-                <span
-                  className={`text-sm font-bold block mb-1 ${
-                    isDark ? "text-orange-400" : "text-orange-600"
-                  }`}
-                >
-                  // Cloud_Infrastructure
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {resumeData.skills.devops.map((skill) => (
-                  <CodeBadge key={skill} text={skill} isDark={isDark} />
-                ))}
-              </div>
-            </TerminalCard>
+            <Reveal className="h-full">
+              <TerminalCard isDark={isDark} tilt={3} className="p-6 h-full">
+                <div className="mb-4">
+                  <span
+                    className={`text-sm font-bold block mb-1 ${
+                      isDark ? "text-orange-400" : "text-orange-600"
+                    }`}
+                  >
+                    // Cloud_&_DevOps
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {resumeData.skills.devops.map((skill) => (
+                    <CodeBadge key={skill} text={skill} isDark={isDark} />
+                  ))}
+                </div>
+              </TerminalCard>
+            </Reveal>
 
-            <TerminalCard isDark={isDark} className="p-6">
-              <div className="mb-4">
-                <span
-                  className={`text-sm font-bold block mb-1 ${
-                    isDark ? "text-purple-400" : "text-purple-600"
-                  }`}
-                >
-                  // Data_Persistence
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {resumeData.skills.database.map((skill) => (
-                  <CodeBadge key={skill} text={skill} isDark={isDark} />
-                ))}
-                {resumeData.skills.languages.map((skill) => (
-                  <CodeBadge key={skill} text={skill} isDark={isDark} />
-                ))}
-              </div>
-            </TerminalCard>
+            <Reveal className="h-full" delay={100}>
+              <TerminalCard isDark={isDark} tilt={3} className="p-6 h-full">
+                <div className="mb-4">
+                  <span
+                    className={`text-sm font-bold block mb-1 ${
+                      isDark ? "text-purple-400" : "text-purple-600"
+                    }`}
+                  >
+                    // Data_Persistence
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {resumeData.skills.database.map((skill) => (
+                    <CodeBadge key={skill} text={skill} isDark={isDark} />
+                  ))}
+                  {resumeData.skills.languages.map((skill) => (
+                    <CodeBadge key={skill} text={skill} isDark={isDark} />
+                  ))}
+                </div>
+              </TerminalCard>
+            </Reveal>
           </div>
         </section>
 
         {/* Experience Section */}
-        <section id="experience" className="mb-32">
-          <TerminalHeader
-            title="./work_experience.sh"
-            icon={Network}
-            isDark={isDark}
-          />
+        <section id="experience" className="mb-32 scroll-mt-24">
+          <Reveal>
+            <TerminalHeader
+              title="./work_experience.sh"
+              icon={Network}
+              isDark={isDark}
+            />
+          </Reveal>
 
           <div className="relative border-l-2 border-dashed ml-4 space-y-12 border-gray-500/30">
-            {resumeData.experience.map((job, idx) => (
-              <div key={idx} className="relative pl-8">
+            {resumeData.experience.map((job) => (
+              <Reveal key={`${job.company}-${job.period}`} className="relative pl-8">
                 {/* Timeline Dot */}
                 <div
                   className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 ${
                     isDark
-                      ? "bg-[#0d1117] border-green-500"
-                      : "bg-white border-blue-500"
+                      ? "border-green-500 " +
+                        (job.current ? "bg-green-500" : "bg-[#0d1117]")
+                      : "border-blue-500 " +
+                        (job.current ? "bg-blue-500" : "bg-white")
                   }`}
-                ></div>
+                >
+                  {job.current && (
+                    <span
+                      className={`absolute inset-0 rounded-full animate-ping ${
+                        isDark ? "bg-green-500/70" : "bg-blue-500/70"
+                      }`}
+                    ></span>
+                  )}
+                </div>
 
                 <TerminalCard
                   isDark={isDark}
-                  className="p-8 group hover:-translate-x-1 transition-transform"
+                  className="p-8 hover:-translate-x-1 transition-transform"
                 >
                   <div className="flex flex-col md:flex-row md:items-start justify-between mb-4">
                     <div>
@@ -1053,46 +1374,52 @@ export default function Portfolio() {
                     ))}
                   </div>
                 </TerminalCard>
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>
 
         {/* Education Section */}
-        <section id="education" className="mb-20">
-          <TerminalHeader
-            title="SELECT * FROM education"
-            icon={Database}
-            isDark={isDark}
-          />
+        <section id="education" className="mb-20 scroll-mt-24">
+          <Reveal>
+            <TerminalHeader
+              title="SELECT * FROM education"
+              icon={Database}
+              isDark={isDark}
+            />
+          </Reveal>
           <div className="grid md:grid-cols-3 gap-6">
             {resumeData.education.map((edu, idx) => (
-              <TerminalCard
-                key={idx}
-                isDark={isDark}
-                className="p-6 flex flex-col justify-between hover:scale-[1.02]"
-              >
-                <div>
-                  <div
-                    className={`text-xs font-bold mb-2 uppercase tracking-wider ${
-                      isDark ? "text-gray-500" : "text-gray-400"
-                    }`}
-                  >
-                    Degree_0{3 - idx}
+              <Reveal key={idx} className="h-full" delay={idx * 100}>
+                <TerminalCard
+                  isDark={isDark}
+                  tilt={4}
+                  className="p-6 h-full flex flex-col justify-between"
+                >
+                  <div>
+                    <div
+                      className={`text-xs font-bold mb-2 uppercase tracking-wider ${
+                        isDark ? "text-gray-500" : "text-gray-400"
+                      }`}
+                    >
+                      Degree_0{3 - idx}
+                    </div>
+                    <h3 className="font-bold mb-2 text-lg">
+                      {edu.institution}
+                    </h3>
+                    <p
+                      className={`text-sm mb-4 ${
+                        isDark ? "text-green-400/80" : "text-blue-600/80"
+                      }`}
+                    >
+                      {edu.degree}
+                    </p>
                   </div>
-                  <h3 className="font-bold mb-2 text-lg">{edu.institution}</h3>
-                  <p
-                    className={`text-sm mb-4 ${
-                      isDark ? "text-green-400/80" : "text-blue-600/80"
-                    }`}
-                  >
-                    {edu.degree}
-                  </p>
-                </div>
-                <div className="text-xs opacity-40 border-t pt-4 border-dashed border-gray-500/30 font-mono">
-                  TIMESTAMP: {edu.period}
-                </div>
-              </TerminalCard>
+                  <div className="text-xs opacity-40 border-t pt-4 border-dashed border-gray-500/30 font-mono">
+                    TIMESTAMP: {edu.period}
+                  </div>
+                </TerminalCard>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -1104,7 +1431,12 @@ export default function Portfolio() {
             <span className="text-blue-500">~</span>$ echo "Built with React.js
             & Three.js"
           </p>
-          <p className="mt-2">© 2025 Vibek Dutta. All systems operational.</p>
+          <p className="mt-2 hidden md:block">
+            # psst: drag the empty space to spin the globe
+          </p>
+          <p className="mt-2">
+            © {new Date().getFullYear()} Vibek Dutta. All systems operational.
+          </p>
         </footer>
       </main>
     </div>
